@@ -28,3 +28,8 @@ al ejecutar el programa se muestra un menu con las opciones:
 5. mostrar el arbol simple
 6. mostrar el rey actual
 7. salir
+
+## autores
+
+- simon (aprox 55 por ciento de los commits)
+- valeria (aprox 45 por ciento de los commits)
