@@ -5,3 +5,5 @@ id,name,last_name,gender,age,id_father,is_dead,was_king,is_king
 4,diana,primero,M,33,2,0,0,0
 5,elena,segundo,M,40,1,0,0,0
 6,fernando,segundo,H,20,5,0,0,0
+7,gregorio,primero,H,18,3,0,0,0
+8,helena,segundo,M,25,4,0,0,0
