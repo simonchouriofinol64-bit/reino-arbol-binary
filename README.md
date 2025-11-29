@@ -10,3 +10,9 @@ este proyecto implementa un sistema simple de sucesion de reyes usando un arbol 
 
 ```bash
 g++ src/main.cpp -o bin/reino
+
+## formato del archivo csv
+
+el archivo bin/family.csv tiene las columnas:
+
+id,name,last_name,gender,age,id_father,is_dead,was_king,is_king
