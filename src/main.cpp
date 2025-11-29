@@ -247,7 +247,7 @@ void cambiar_rey(person_node* root, person_node* &current_king, bool por_muerte)
 
     if (por_muerte) {
         current_king->is_dead = true;
-        cout << "el rey " << current_king->name << " ha muerto :( << endl;
+        cout << "el rey " << current_king->name << " ha muerto :(" << endl;
     } else {
         cout << "el rey " << current_king->name << " ha pasado de 70 anos" << endl;
     }
@@ -339,7 +339,7 @@ void editar_persona(map<int, person_node*> &nodos) {
 }
 
 int main() {
-    string ruta_csv = "bin/family.csv";
+    string ruta_csv = "family.csv";
 
     map<int, person_node*> nodos;
     person_node* root = nullptr;
