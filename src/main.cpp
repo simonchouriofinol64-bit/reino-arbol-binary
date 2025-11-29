@@ -93,7 +93,7 @@ bool cargar_csv(const string &ruta, map<int, person_node*> &nodos, person_node* 
         nodos[p->id] = p;
     }
 
-    // segunda pasada: enlazar relaciones padre - hijos
+    // segunda pasada: enlazar relaciones padre e hijos
     root = nullptr;
     for (auto &par : nodos) {
         person_node* p = par.second;
@@ -247,7 +247,7 @@ void cambiar_rey(person_node* root, person_node* &current_king, bool por_muerte)
 
     if (por_muerte) {
         current_king->is_dead = true;
-        cout << "el rey " << current_king->name << " ha muerto" << endl;
+        cout << "el rey " << current_king->name << " ha muerto :( << endl;
     } else {
         cout << "el rey " << current_king->name << " ha pasado de 70 anos" << endl;
     }
@@ -354,7 +354,7 @@ int main() {
 
     while (true) {
         cout << endl;
-        cout << "===== menu reino =====" << endl;
+        cout << "===== menu del reino mas poderoso (supuestamente) =====" << endl;
         cout << "1. mostrar linea de sucesion" << endl;
         cout << "2. marcar muerte del rey actual y asignar nuevo rey" << endl;
         cout << "3. marcar que el rey actual pasa de 70 anos y asignar nuevo rey" << endl;
@@ -368,19 +368,19 @@ int main() {
 
         if (opcion == 1) {
             if (current_king == nullptr) {
-                cout << "no hay rey actual" << endl;
+                cout << "no existe rey actual" << endl;
             } else {
                 mostrar_linea_sucesion(root, current_king);
             }
         } else if (opcion == 2) {
             if (current_king == nullptr) {
-                cout << "no hay rey actual" << endl;
+                cout << "no existe rey actual" << endl;
             } else {
                 cambiar_rey(root, current_king, true);
             }
         } else if (opcion == 3) {
             if (current_king == nullptr) {
-                cout << "no hay rey actual" << endl;
+                cout << "no existe rey actual" << endl;
             } else {
                 cambiar_rey(root, current_king, false);
             }
@@ -390,16 +390,16 @@ int main() {
             mostrar_arbol_simple(root);
         } else if (opcion == 6) {
             if (current_king) imprimir_persona(current_king, true);
-            else cout << "no hay rey actual" << endl;
+            else cout << "no existe rey actual" << endl;
         } else if (opcion == 7) {
-            cout << "saliendo del programa..." << endl;
+            cout << "saliendo del programa, adios..." << endl;
             break;
         } else {
-            cout << "opcion invalida" << endl;
+            cout << "opcion invalida, intente de nuevo profesor" << endl;
         }
     }
 
-    // liberar memoria
+    // ultimo paso, liberar memoria
     for (auto &par : nodos) {
         delete par.second;
     }
