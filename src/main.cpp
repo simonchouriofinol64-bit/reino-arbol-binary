@@ -12,7 +12,7 @@ struct person_node {
     int id;
     string name;
     string last_name;
-    char gender; 
+    char gender; // 'H' o 'M'
     int age;
     int id_father;
     bool is_dead;
@@ -20,8 +20,8 @@ struct person_node {
     bool is_king;
 
     person_node* parent;
-    person_node* first_child;   
-    person_node* second_child;  
+    person_node* first_child;   // primogenito
+    person_node* second_child;  // segundo hijo
 
     person_node() {
         id = 0;
@@ -37,6 +37,7 @@ struct person_node {
     }
 };
 
+// funciones auxiliares
 void trim(string &s) {
     while (!s.empty() && (s.back() == '\r' || s.back() == '\n' || s.back() == ' ' || s.back() == '\t')) {
         s.pop_back();
@@ -51,13 +52,13 @@ bool cargar_csv(const string &ruta, map<int, person_node*> &nodos, person_node* 
     }
 
     string line;
-    
+    // leer encabezado
     if (!getline(file, line)) {
         cout << "csv vacio" << endl;
         return false;
     }
 
-
+    // primera pasada: crear nodos
     while (getline(file, line)) {
         trim(line);
         if (line.empty()) continue;
@@ -92,6 +93,7 @@ bool cargar_csv(const string &ruta, map<int, person_node*> &nodos, person_node* 
         nodos[p->id] = p;
     }
 
+    // segunda pasada: enlazar relaciones padre - hijos
     root = nullptr;
     for (auto &par : nodos) {
         person_node* p = par.second;
@@ -107,7 +109,7 @@ bool cargar_csv(const string &ruta, map<int, person_node*> &nodos, person_node* 
                 } else if (padre->second_child == nullptr) {
                     padre->second_child = p;
                 } else {
-                
+                    // mas de dos hijos, no deberia pasar
                     cout << "advertencia: padre con mas de dos hijos, id padre: " << padre->id << endl;
                 }
             }
@@ -123,7 +125,7 @@ bool cargar_csv(const string &ruta, map<int, person_node*> &nodos, person_node* 
     }
 
     if (current_king == nullptr) {
-        
+        // si no hay rey marcado, asumimos que la raiz es rey
         current_king = root;
         current_king->is_king = true;
     }
@@ -162,6 +164,7 @@ void mostrar_arbol_simple(person_node* node, int nivel = 0) {
     mostrar_arbol_simple(node->second_child, nivel + 1);
 }
 
+// obtiene lista de personas en orden genealogico (pre order) despues del rey actual
 void obtener_lista_despues_de_rey(person_node* root, person_node* current_king, vector<person_node*> &despues) {
     vector<person_node*> todos;
     pre_order(root, todos);
@@ -177,6 +180,9 @@ void obtener_lista_despues_de_rey(person_node* root, person_node* current_king, 
     }
 }
 
+// encuentra siguiente rey segun reglas simplificadas:
+// 1) buscar primer hombre vivo menor a 70 despues del rey actual en orden genealogico
+// 2) si no hay hombres, buscar mujer viva mayor a 15, la mas joven (empate: la que aparezca antes)
 person_node* encontrar_siguiente_rey(person_node* root, person_node* current_king) {
     vector<person_node*> despues;
     obtener_lista_despues_de_rey(root, current_king, despues);
@@ -193,6 +199,7 @@ person_node* encontrar_siguiente_rey(person_node* root, person_node* current_kin
         return candidato_hombre;
     }
 
+    // no hay hombres, buscar mujer
     person_node* candidata_mujer = nullptr;
     for (auto p : despues) {
         if (p->gender == 'M' && !p->is_dead && p->age > 15) {
@@ -231,6 +238,7 @@ void mostrar_linea_sucesion(person_node* root, person_node* current_king) {
     }
 }
 
+// marca muerte de rey (o que pasa los 70) y asigna nuevo rey
 void cambiar_rey(person_node* root, person_node* &current_king, bool por_muerte) {
     if (current_king == nullptr) {
         cout << "no hay rey actual" << endl;
@@ -255,6 +263,8 @@ void cambiar_rey(person_node* root, person_node* &current_king, bool por_muerte)
         return;
     }
 
+    // si existe al menos un hombre vivo menor a 70 en toda la familia,la corona debe ir a hombre (aunque actualmente sea reina)
+    // nuestra funcion ya prioriza hombres
     nuevo_rey->is_king = true;
     current_king = nuevo_rey;
 
@@ -262,13 +272,14 @@ void cambiar_rey(person_node* root, person_node* &current_king, bool por_muerte)
     imprimir_persona(current_king, true);
 }
 
-
+// buscar persona por id
 person_node* buscar_por_id(map<int, person_node*> &nodos, int id) {
     auto it = nodos.find(id);
     if (it != nodos.end()) return it->second;
     return nullptr;
 }
 
+// editar datos de persona (menos id e id_father)
 void editar_persona(map<int, person_node*> &nodos) {
     int id;
     cout << "ingrese id de la persona a editar: ";
@@ -388,11 +399,12 @@ int main() {
         }
     }
 
-
+    // liberar memoria
     for (auto &par : nodos) {
         delete par.second;
     }
 
     return 0;
 }
+
 
